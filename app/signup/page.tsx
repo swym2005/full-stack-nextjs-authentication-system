@@ -2,8 +2,8 @@
 import Link from "next/link";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "react-hot-toast";
-import axios from "axios";
+import { toast, Toaster } from "react-hot-toast";
+import axios, { AxiosError } from "axios";
 
 export default function SignupPage() {
 
@@ -28,12 +28,12 @@ export default function SignupPage() {
             // Taking the data from frontend and putting it to backend.
             const response = await axios.post("/api/users/signup", user);
             console.log("Signup success", response.data);
+            toast.success("Signup Successful");
             // Now the user should be pushed onto the login screen so..
             router.push("/login");
 
-        } catch (error:any) {
+        } catch (error: any) {
             console.log("SignUp failed", error.message)
-
             toast.error(error.message)
         }finally{
             setLoading(false)
@@ -56,6 +56,7 @@ export default function SignupPage() {
             <hr />
             <label htmlFor="username">username</label>
             <input
+            id="username"
             className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600"
              type="text" 
             value={user.username}
@@ -64,6 +65,7 @@ export default function SignupPage() {
 
              <label htmlFor="email">email</label>
             <input
+            id="email"
             className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600"
              type="email" 
             value={user.email}
@@ -72,13 +74,15 @@ export default function SignupPage() {
 
              <label htmlFor="password">password</label>
             <input
+            id="password"
             className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600"
              type="password" 
             value={user.password}
             onChange={(e) => setUser({...user, password: e.target.value})}
             placeholder="password" />
             
-            <button onClick={onSignUp} className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600">{buttonDisabled ? "No SignUp" : "SignUp"}</button>
+            <button disabled={buttonDisabled || loading} onClick={onSignUp} className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 disabled:opacity-50">{buttonDisabled ? "No SignUp" : "SignUp"}</button>
+            <Toaster position="bottom-right" />
             <Link href="/login">Visit Login Page</Link>
         </div>
     )

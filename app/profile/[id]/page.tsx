@@ -1,5 +1,8 @@
-export default async function UserProfile({params}:any) {
-    
+type UserProfilePageProps = {
+    params: Promise<{ id: string }>;
+};
+
+export default async function UserProfile({ params }: UserProfilePageProps) {
 const { id } = await params;
     return (
         <div className="flex flex-col items-center justify-center min-h-screen py-2">

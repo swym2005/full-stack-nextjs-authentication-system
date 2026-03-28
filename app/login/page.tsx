@@ -2,8 +2,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
-import axios from "axios";
-import toast from "react-hot-toast";
+import axios, { AxiosError } from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function LoginPage() {
 
@@ -20,9 +20,9 @@ export default function LoginPage() {
     const onLogin = async () => {
         try {
             setLoading(true);
-            const response = await axios.post('api/users/login', user);
+            const response = await axios.post('/api/users/login', user);
             console.log("Login success", response.data);
-            toast.success("Login Success")
+            toast.success("Login Success");
             router.push("/profile");
         } catch (error: any) {
             console.log("Login failed", error.message);
@@ -50,6 +50,7 @@ export default function LoginPage() {
             
              <label htmlFor="email">email</label>
             <input
+            id="email"
             className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600"
              type="email" 
             value={user.email}
@@ -58,13 +59,15 @@ export default function LoginPage() {
 
              <label htmlFor="password">password</label>
             <input
+            id="password"
             className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600"
              type="password" 
             value={user.password}
             onChange={(e) => setUser({...user, password: e.target.value})}
             placeholder="password" />
             
-            <button onClick={onLogin} className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600">{buttonDisabled ? 'No Login' : 'Login Here'}</button>
+            <button disabled={buttonDisabled || loading} onClick={onLogin} className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 disabled:opacity-50">{buttonDisabled ? 'No Login' : 'Login Here'}</button>
+            <Toaster position="bottom-right"/>
             <Link href="/signup">Visit SignUp Page</Link>
         </div>
     )
