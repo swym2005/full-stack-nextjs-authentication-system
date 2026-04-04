@@ -32,14 +32,37 @@ export default function LoginPage() {
         }
     }
 
+    const onForgotPassword = async () => {
+        try {
+            const response = await axios.post('/api/users/resetpassword', { email: user.email });
+            console.log("Forget password done");
+            toast.success("If an account exists, A Mail is sent to reset your Password ");
+        } catch (error: any) {
+            console.log("Forgot Password Request Failed");
+            toast.error(error.message);
+        }
+
+    }
+
      const [buttonDisabled, setButtonDisabled] = React.useState(false);
-      const[loading, setLoading] = React.useState(false);
+      const [loading, setLoading] = React.useState(false);
+      const [button2Disabled, setButton2Disabled] = React.useState(false);
 
       React.useEffect(() => {
         if(user.email.length > 0 && user.password.length > 0) {
             setButtonDisabled(false);
         }else{
             setButtonDisabled(true);
+        }
+      }, [user])
+
+      React.useEffect(() => {
+        if(user.email.length > 0)
+        {
+            setButton2Disabled(false);
+        }else
+        {
+            setButton2Disabled(true);
         }
       }, [user])
 
@@ -67,6 +90,7 @@ export default function LoginPage() {
             placeholder="password" />
             
             <button disabled={buttonDisabled || loading} onClick={onLogin} className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 disabled:opacity-50">{buttonDisabled ? 'No Login' : 'Login Here'}</button>
+            <button disabled={button2Disabled} onClick={onForgotPassword} className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 disabled:opacity-50">Forgot Password</button>
             <Toaster position="bottom-right"/>
             <Link href="/signup">Visit SignUp Page</Link>
         </div>
